@@ -12,4 +12,11 @@ class HomeProvider with ChangeNotifier {
     planet = l1;
     notifyListeners();
   }
+
+  bool isAnimation = true;
+
+  void changeAnimation(bool change) {
+    isAnimation = change;
+    notifyListeners();
+  }
 }

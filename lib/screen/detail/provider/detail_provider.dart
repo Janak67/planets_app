@@ -13,7 +13,7 @@ class DetailProvider with ChangeNotifier {
     notifyListeners();
   }
 
-//BookMark
+  //BookMark
   List<String> bookMarkPlanet = [];
 
   void getBookMark() async {

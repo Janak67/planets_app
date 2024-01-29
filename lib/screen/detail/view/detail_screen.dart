@@ -15,7 +15,7 @@ class _DetailScreenState extends State<DetailScreen>
     with TickerProviderStateMixin {
   DetailProvider? providerr;
   DetailProvider? providerw;
-  late AnimationController animationController;
+  AnimationController? animationController;
 
   @override
   void initState() {
@@ -25,7 +25,10 @@ class _DetailScreenState extends State<DetailScreen>
         lowerBound: 0,
         upperBound: 1,
         reverseDuration: const Duration(milliseconds: 10000));
-    animationController.repeat();
+    animationController!.addListener(() {
+      setState(() {});
+    });
+    animationController!.repeat();
     context.read<DetailProvider>().getBookMark();
     super.initState();
   }
@@ -33,7 +36,7 @@ class _DetailScreenState extends State<DetailScreen>
   @override
   void dispose() {
     super.dispose();
-    animationController.dispose();
+    animationController!.dispose();
   }
 
   @override
@@ -113,18 +116,18 @@ class _DetailScreenState extends State<DetailScreen>
                     ),
               Column(
                 children: [
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 80),
                   Align(
                     alignment: Alignment.topCenter,
                     child: RotationTransition(
-                      turns: animationController,
+                      turns: animationController!,
                       child: Hero(
                         tag: '${h1.image1}',
                         child: Image.asset('${h1.image1}'),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 70),
+                  const SizedBox(height: 50),
                   Container(
                     padding: const EdgeInsets.all(12),
                     margin: const EdgeInsets.all(15),

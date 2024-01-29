@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   HomeProvider? providerr;
   HomeProvider? providerw;
-  late AnimationController animationController;
+  AnimationController? animationController;
 
   @override
   void initState() {
@@ -24,7 +24,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 6000),
         lowerBound: 0,
         upperBound: 1);
-    animationController.repeat();
+    animationController!.addListener(() {
+      setState(() {});
+    });
+    animationController!.repeat();
     super.initState();
   }
 
@@ -58,22 +61,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 HomeModel planetList = providerr!.planet[index];
                 return InkWell(
                   onTap: () {
+                    providerr!.changeAnimation(!providerr!.isAnimation);
                     Navigator.pushNamed(context, 'detail',
                         arguments: planetList);
                   },
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.bounceIn,
                     margin: const EdgeInsets.all(8),
                     height: 100,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.grey.withOpacity(0.4)),
+                      borderRadius: BorderRadius.circular(6),
+                      color: providerr!.isAnimation
+                          ? Colors.grey.withOpacity(0.2)
+                          : Colors.grey.withOpacity(0.4),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: [
                           RotationTransition(
-                            turns: animationController,
+                            turns: animationController!,
                             child: Hero(
                               tag: '${planetList.image1}',
                               child: Image.asset(
