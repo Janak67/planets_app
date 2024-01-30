@@ -11,24 +11,32 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   HomeProvider? providerr;
   HomeProvider? providerw;
   AnimationController? animationController;
 
   @override
   void initState() {
+    super.initState();
     context.read<HomeProvider>().getData();
+    context.read<HomeProvider>().getBookMark();
     animationController = AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 6000),
         lowerBound: 0,
         upperBound: 1);
-    animationController!.addListener(() {
-      setState(() {});
-    });
+    // animationController!.addListener(() {
+    //   setState(() {});
+    // });
     animationController!.repeat();
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController!.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 HomeModel planetList = providerr!.planet[index];
                 return InkWell(
                   onTap: () {
+                    providerw!.changeIndex(index);
                     providerr!.changeAnimation(!providerr!.isAnimation);
                     Navigator.pushNamed(context, 'detail',
                         arguments: planetList);
@@ -116,13 +125,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         drawer: Drawer(
           child: ListView.builder(
-            itemCount: context.watch<DetailProvider>().bookMarkPlanet.length,
+            itemCount: providerw!.bookMarkPlanet!.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(
-                  context.watch<DetailProvider>().bookMarkPlanet[index],
-                  style: const TextStyle(color: Colors.black, fontSize: 30),
-                ),
+                title: Text(providerr!.bookMarkPlanet![index],
+                    style: Theme.of(context).textTheme.titleLarge),
               );
             },
           ),

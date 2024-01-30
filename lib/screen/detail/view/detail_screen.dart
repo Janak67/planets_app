@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planets_app/screen/detail/provider/detail_provider.dart';
 import 'package:planets_app/screen/home/model/home_model.dart';
+import 'package:planets_app/screen/home/provider/home_provider.dart';
 import 'package:planets_app/utils/share_helper.dart';
 import 'package:provider/provider.dart';
 
@@ -12,96 +13,101 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen>
-    with TickerProviderStateMixin {
-  DetailProvider? providerr;
-  DetailProvider? providerw;
+    with SingleTickerProviderStateMixin {
   AnimationController? animationController;
+  HomeProvider? providerr;
+  HomeProvider? providerw;
 
   @override
   void initState() {
+    super.initState();
     animationController = AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 10000),
         lowerBound: 0,
         upperBound: 1,
         reverseDuration: const Duration(milliseconds: 10000));
-    animationController!.addListener(() {
-      setState(() {});
-    });
+    // animationController!.addListener(() {
+    //   setState(() {});
+    // });
     animationController!.repeat();
-    context.read<DetailProvider>().getBookMark();
-    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     animationController!.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    providerr = context.read<DetailProvider>();
-    providerw = context.watch<DetailProvider>();
+    providerr = context.read<HomeProvider>();
+    providerw = context.watch<HomeProvider>();
     HomeModel h1 = ModalRoute.of(context)!.settings.arguments as HomeModel;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: Text('${h1.name}'),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    child: Row(
-                      children: [
-                        providerw!.isLight == true
-                            ? const Icon(Icons.dark_mode, color: Colors.black)
-                            : const Icon(Icons.dark_mode_outlined),
-                        const Text('Theme'),
-                        Consumer<DetailProvider>(
-                          builder: (context, value1, child) => Switch(
-                            value: value1.isLight,
-                            onChanged: (value) {
-                              ShareHelper shr = ShareHelper();
-                              shr.setTheme(value);
-                              value1.changeTheme();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // PopupMenuItem(
-                  //   child: IconButton(
-                  //     onPressed: () {
-                  //       providerr!.getBookMark();
-                  //       if (!providerr!.bookMarkPlanet
-                  //           .contains(providerr!.h1!.name)) {
-                  //         providerr!.addBookMark();
-                  //       } else {
-                  //         providerr!.deleteBookMark();
-                  //       }
-                  //     },
-                  //     icon: Icon(
-                  //       providerw!.bookMarkPlanet
-                  //                   .contains(providerr!.h1!.name) ==
-                  //               true
-                  //           ? Icons.favorite
-                  //           : Icons.favorite_outline,
-                  //       color: Colors.black,
-                  //     ),
-                  //   ),
-                  // ),
-                ];
+            IconButton(
+              onPressed: () {
+                providerr!.getBookMark();
+                if (!providerr!.bookMarkPlanet!
+                    .contains(providerr!.planet[providerw!.index!].name)) {
+                  providerr!.addBookMark();
+                } else {
+                  providerr!.deleteBookMark();
+                }
               },
-            )
+              icon: Icon(
+                providerw!.bookMarkPlanet!
+                        .contains(providerw!.planet[providerw!.index!].name)
+                    ? Icons.favorite
+                    : Icons.favorite_outline,
+              ),
+            ),
+            Consumer<DetailProvider>(
+              builder: (context, value1, child) => Switch(
+                value: value1.isLight,
+                onChanged: (value) {
+                  ShareHelper shr = ShareHelper();
+                  shr.setTheme(value);
+                  value1.changeTheme();
+                },
+              ),
+            ),
+            // PopupMenuButton(
+            //   itemBuilder: (context) {
+            //     return [
+            //       PopupMenuItem(
+            //         child: Row(
+            //           children: [
+            //             context.watch<DetailProvider>().isLight == true
+            //                 ? const Icon(Icons.dark_mode, color: Colors.black)
+            //                 : const Icon(Icons.dark_mode_outlined),
+            //             const Text('Theme'),
+            //             Consumer<DetailProvider>(
+            //               builder: (context, value1, child) => Switch(
+            //                 value: value1.isLight,
+            //                 onChanged: (value) {
+            //                   ShareHelper shr = ShareHelper();
+            //                   shr.setTheme(value);
+            //                   value1.changeTheme();
+            //                 },
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ];
+            //   },
+            // )
           ],
         ),
         body: SingleChildScrollView(
           child: Stack(
             children: [
-              providerw!.isLight == false
+              context.watch<DetailProvider>().isLight == false
                   ? Image.asset(
                       'assets/img/background.jpg',
                       height: MediaQuery.sizeOf(context).height,
@@ -133,7 +139,7 @@ class _DetailScreenState extends State<DetailScreen>
                     margin: const EdgeInsets.all(15),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: providerw!.isLight == true
+                      color: context.watch<DetailProvider>().isLight == true
                           ? Colors.grey.withOpacity(0.5)
                           : Colors.black38,
                       borderRadius: BorderRadius.circular(13),
@@ -142,8 +148,8 @@ class _DetailScreenState extends State<DetailScreen>
                         style: Theme.of(context).textTheme.titleLarge),
                   ),
                   Text(
-                    textAlign: TextAlign.start,
                     'Distance Earth :- ${h1.distanceEarth}',
+                    textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
