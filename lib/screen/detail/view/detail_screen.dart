@@ -57,8 +57,14 @@ class _DetailScreenState extends State<DetailScreen>
                     !providerr!.bookMarkPlanet!.contains(
                         providerr!.planet[providerw!.index!].distance)) {
                   providerr!.addBookMark();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Saved to My Favorites')),
+                  );
                 } else {
                   providerr!.deleteBookMark();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Remove')),
+                  );
                 }
               },
               icon: Icon(
