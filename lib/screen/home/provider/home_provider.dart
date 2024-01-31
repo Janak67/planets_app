@@ -37,6 +37,7 @@ class HomeProvider with ChangeNotifier {
   void addBookMark() {
     ShareHelper shareHelper = ShareHelper();
     bookMarkPlanet!.add(planet[index!].name!);
+    bookMarkPlanet!.add(planet[index!].distance);
     shareHelper.setPlanet(bookMarkPlanet!);
     getBookMark();
     notifyListeners();
@@ -45,6 +46,7 @@ class HomeProvider with ChangeNotifier {
   void deleteBookMark() {
     ShareHelper shareHelper = ShareHelper();
     bookMarkPlanet!.remove(planet[index!].name);
+    bookMarkPlanet!.remove(planet[index!].distance);
     shareHelper.setPlanet(bookMarkPlanet!);
     getBookMark();
     notifyListeners();

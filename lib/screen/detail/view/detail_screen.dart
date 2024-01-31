@@ -53,7 +53,9 @@ class _DetailScreenState extends State<DetailScreen>
               onPressed: () {
                 providerr!.getBookMark();
                 if (!providerr!.bookMarkPlanet!
-                    .contains(providerr!.planet[providerw!.index!].name)) {
+                        .contains(providerr!.planet[providerw!.index!].name) &&
+                    !providerr!.bookMarkPlanet!.contains(
+                        providerr!.planet[providerw!.index!].distance)) {
                   providerr!.addBookMark();
                 } else {
                   providerr!.deleteBookMark();
@@ -99,6 +101,25 @@ class _DetailScreenState extends State<DetailScreen>
             //           ],
             //         ),
             //       ),
+            //       PopupMenuItem(child: IconButton(
+            //         onPressed: () {
+            //           providerr!.getBookMark();
+            //           if (!providerr!.bookMarkPlanet!
+            //               .contains(providerr!.planet[providerw!.index!].name) &&
+            //               !providerr!.bookMarkPlanet!.contains(
+            //                   providerr!.planet[providerw!.index!].distance)) {
+            //             providerr!.addBookMark();
+            //           } else {
+            //             providerr!.deleteBookMark();
+            //           }
+            //         },
+            //         icon: Icon(
+            //           providerw!.bookMarkPlanet!
+            //               .contains(providerw!.planet[providerw!.index!].name)
+            //               ? Icons.favorite
+            //               : Icons.favorite_outline,
+            //         ),
+            //       ),),
             //     ];
             //   },
             // )
